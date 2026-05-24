@@ -1,0 +1,329 @@
+/* 日系功能性工裝美學風格 - 環安衛優化版 */
+:root {
+    --bg-color: #f7f8fa;
+    --card-bg: #ffffff;
+    --text-primary: #222222;
+    --text-muted: #666666;
+    --accent-color: #1a1a1a;
+    --border-color: #e5e5e5;
+    --success-color: #2e7d32;
+    --fail-color: #c62828;
+    --radius: 6px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 680px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 0 0 8px 0;
+}
+
+.subtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+/* 頁面切換機制 */
+.page {
+    display: none;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.page.active {
+    display: block;
+}
+
+h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 25px;
+    border-left: 4px solid var(--accent-color);
+    padding-left: 12px;
+}
+
+/* 表單控制項 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    background-color: #fafafa;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background-color: #ffffff;
+}
+
+/* 按鈕美化 */
+.btn-submit {
+    width: 100%;
+    background-color: var(--accent-color);
+    color: #ffffff;
+    border: none;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 15px;
+}
+
+.btn-submit:hover {
+    background-color: #333333;
+}
+
+.btn-submit:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    width: 100%;
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    font-size: 0.95rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-secondary:hover {
+    background-color: #f0f0f0;
+}
+
+/* 題目塊設計 */
+.question-block {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.question-title {
+    font-size: 1.05rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.q-source {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-left: 6px;
+}
+
+.options-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.option-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    cursor: pointer;
+    background-color: #fafafa;
+    font-size: 0.95rem;
+    transition: background-color 0.15s ease;
+}
+
+.option-label:hover {
+    background-color: #f0f0f0;
+}
+
+.option-label input[type="radio"] {
+    margin: 0;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-color);
+}
+
+/* 第三頁結果摘要 */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 25px;
+    background: #fafafa;
+    padding: 15px;
+    border-radius: var(--radius);
+}
+
+.info-item {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+}
+
+.info-item .value {
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.text-highlight {
+    color: #2b579a !important;
+}
+
+.score-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: var(--radius);
+    margin-bottom: 25px;
+}
+
+.score-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.score-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.large-score {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.status-box {
+    padding: 10px 20px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-radius: var(--radius);
+}
+
+.status-box.pass {
+    background-color: #e8f5e9;
+    color: var(--success-color);
+}
+
+.status-box.fail {
+    background-color: #ffebee;
+    color: var(--fail-color);
+}
+
+/* 錯題區 */
+.error-zone {
+    margin-top: 30px;
+}
+
+.error-zone-title {
+    font-size: 1.1rem;
+    color: #333;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+}
+
+.perfect-text {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.wrong-item {
+    border-bottom: 1px dashed var(--border-color);
+    padding: 12px 0;
+}
+
+.wrong-q {
+    margin: 0 0 6px 0;
+    font-weight: 500;
+}
+
+.wrong-user {
+    color: var(--fail-color);
+    margin: 0 0 4px 0;
+    font-size: 0.9rem;
+}
+
+.wrong-correct {
+    color: var(--success-color);
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.source-tag {
+    color: #888888;
+}
+
+.exam-date {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-align: right;
+    margin-top: 20px;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* RWD 行動裝置優化 */
+@media (max-width: 480px) {
+    .container { margin: 10px auto; padding: 10px; }
+    .page { padding: 15px; }
+    .info-grid { grid-template-columns: 1fr; }
+    .score-container { flex-direction: column; gap: 15px; text-align: center; }
+}
