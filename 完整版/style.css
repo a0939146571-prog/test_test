@@ -1,0 +1,168 @@
+function doGet(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName("Questions");
+  if (!sheet) {
+    return ContentService.createTextOutput(JSON.stringify({error: "找不到 Questions 工作表"})).setMimeType(ContentService.MimeType.JSON);
+  }
+  const data = sheet.getDataRange().getValues();
+  data.shift(); // 移除標題列
+
+  let targetType = "承攬商長期工作證";
+  if (e && e.parameter && e.parameter.type) {
+    targetType = e.parameter.type.trim();
+  }
+
+  // ==========================================
+  // [數量修改區] 可以依據需求隨時更動隨機抽題數量
+  // ==========================================
+  const TF_COUNT = 20; // 是非題隨機抽幾題
+  const MC_COUNT = 20; // 單選題隨機抽幾題
+
+  let tfPool = [], mcPool = [];
+  
+  data.forEach(row => {
+    let qExamType = row[6] ? row[6].toString().trim() : "";
+    
+    if (qExamType === targetType) {
+      let q = { 
+        id: row[0], 
+        type: row[1], 
+        question: row[2], 
+        options: row[3] ? row[3].toString().split(",") : [], 
+        source: row[5] 
+      };
+      if (q.type === "TF") tfPool.push(q); else mcPool.push(q);
+    }
+  });
+
+  let selected = [...shuffle(tfPool).slice(0, TF_COUNT), ...shuffle(mcPool).slice(0, MC_COUNT)];
+  return ContentService.createTextOutput(JSON.stringify(selected)).setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  const postData = JSON.parse(e.postData.contents);
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  // 分支一：正式【成績登錄】 + 【後端默默自動產出 PDF 存入指定資料夾】
+  if (postData.action === "save") {
+    const rSheet = ss.getSheetByName("Records");
+    if (!rSheet) {
+      return ContentService.createTextOutput("Error: Records sheet not found");
+    }
+    const info = postData.userInfo;
+    const score = postData.score;
+    const details = postData.details; 
+    
+    const resultStatus = score >= 80 ? "及格" : "不及格";
+    
+    rSheet.appendRow([
+      new Date(), 
+      info.vendorName, 
+      info.employeeId, 
+      info.userName, 
+      score,
+      resultStatus, 
+      info.examType  
+    ]);
+
+    // 2. 自動在後端產生 PDF 並儲存到您的雲端硬碟資料夾中
+    try {
+      const FOLDER_ID = "1K19ofLQyIK34Zh0Mi50bda8YkJlpcvCC"; 
+      
+      const folder = DriveApp.getFolderById(FOLDER_ID);
+      const fileName = `[${info.employeeId}_${info.userName}]${info.examType}_${score}分`;
+      
+      let today = new Date();
+      let month = (today.getMonth() + 1).toString().padStart(2, '0');
+      let day = today.getDate().toString().padStart(2, '0');
+      let dateString = `${today.getFullYear()}/${month}/${day}`;
+      
+      let htmlBody = `
+        <div style="font-family: 'Microsoft JhengHei', Arial, sans-serif; padding: 20px;">
+          <h1 style="text-align: center; color: #333;">環安衛測驗成果紀錄表</h1>
+          <hr style="border: 1px solid #ccc;">
+          <p style="font-size:1.1em; margin: 8px 0;"><b>考試項目：</b>${info.examType}</p>
+          <p style="font-size:1.1em; margin: 8px 0;"><b>廠商名稱：</b>${info.vendorName}</p>
+          <p style="font-size:1.1em; margin: 8px 0;"><b>工號：</b>${info.employeeId} &nbsp;&nbsp;&nbsp;&nbsp; <b>姓名：</b>${info.userName}</p>
+          <p style="font-size:1.1em; margin: 8px 0;"><b>測驗成績：</b><span style="font-size: 22px; color: ${score >= 80 ? 'green' : 'red'}; font-weight: bold;">${score} 分 (${resultStatus})</span></p>
+          <p style="font-size:0.95em; color:#666; margin: 8px 0;"><b>試卷產出日期：</b>${dateString}</p>
+          
+          <h3 style="color: #d9534f; margin-top: 30px; border-bottom: 2px solid #eee; padding-bottom: 5px;">本次測試答錯題目解析明細</h3>
+      `;
+      
+      let wrongs = details.filter(d => !d.isCorrect);
+      if (wrongs.length === 0) {
+        htmlBody += `<p style="color: green; font-weight: bold; font-size: 1.1em;">恭喜！本次測驗全對，完美通過！</p>`;
+      } else {
+        wrongs.forEach((w, index) => {
+          let userAnsText = w.userAns === "true" ? "是" : (w.userAns === "false" ? "非" : w.userAns);
+          let correctAnsText = w.correctAns === "true" ? "是" : (w.correctAns === "false" ? "非" : w.correctAns);
+          htmlBody += `
+            <div style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #ccc; font-size: 1em;">
+              <p style="margin: 5px 0;"><b>題目 ${index + 1}：</b>${w.question}</p>
+              <p style="color: red; margin: 3px 0;">考生答案：${userAnsText}</p>
+              <p style="color: green; margin: 3px 0;">正確答案：${correctAnsText} <small style="color: gray;">(出處: ${w.source})</small></p>
+            </div>
+          `;
+        });
+      }
+      htmlBody += `</div>`;
+      
+      let blob = Utilities.newBlob(htmlBody, "text/html", fileName + ".html");
+      let pdfBlob = blob.getAs("application/pdf").setName(fileName + ".pdf");
+      folder.createFile(pdfBlob); 
+      
+    } catch(err) {
+      console.log("PDF 後端自動產生失敗: " + err.toString());
+    }
+
+    return ContentService.createTextOutput("Saved and PDF Generated");
+  } 
+  
+  // 分支二：網頁交卷時的線上【評分與詳解回傳】
+  else {
+    const qSheet = ss.getSheetByName("Questions");
+    const qData = qSheet.getDataRange().getValues();
+    data.shift(); 
+    
+    let answerKey = {};
+    qData.forEach(row => { 
+      answerKey[row[0]] = { ans: row[4].toString().trim(), q: row[2], s: row[5], t: row[1] }; 
+    });
+
+    let correct = 0;
+    let details = [];
+    let userAns = postData.answers;
+    
+    for (let id in userAns) {
+      let isC = userAns[id].toString().trim() === answerKey[id].ans;
+      if (isC) correct++;
+      
+      details.push({ 
+        id: id, 
+        question: answerKey[id].q, 
+        userAns: userAns[id], 
+        correctAns: answerKey[id].ans, 
+        isCorrect: isC, 
+        source: answerKey[id].s, 
+        type: answerKey[id].t 
+      });
+    }
+    
+    let finalScore = (correct / details.length) * 100;
+    finalScore = Math.round(finalScore * 10) / 10; 
+
+    return ContentService.createTextOutput(JSON.stringify({ 
+      score: finalScore, 
+      details: details 
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}

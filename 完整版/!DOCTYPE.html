@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>采鈺承攬商環安衛考試</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>采鈺承攬商環安衛考試</h1>
+
+        <div id="page1" class="page active">
+            <h2>請輸入考生資訊</h2>
+            <div class="form-group">
+                <label for="vendorName">廠商名稱:</label>
+                <input type="text" id="vendorName" required>
+            </div>
+            <div class="form-group">
+                <label for="employeeId">工號 (8碼英數或連字號):</label>
+                <input type="text" id="employeeId" maxlength="8" pattern="^[a-zA-Z0-9-]{8}$" required>
+            </div>
+            <div class="form-group">
+                <label for="userName">姓名:</label>
+                <input type="text" id="userName" required>
+            </div>
+            <div class="form-group">
+                <label for="examType">選擇考試項目:</label>
+                <select id="examType" required>
+                    <option value="承攬商長期工作證">承攬商長期工作證</option>
+                    <option value="緊急入廠_龍潭廠">緊急入廠_龍潭廠</option>
+                    <option value="緊急入廠_新竹廠">緊急入廠_新竹廠</option>
+                    <option value="天花板_教育訓練">天花板_教育訓練</option>
+                    <option value="天花板_簡易母索">天花板_簡易母索</option>
+                </select>
+            </div>
+            <button onclick="goToPage2()">確認</button>
+        </div>
+
+        <div id="page2" class="page">
+            <h2>考題</h2>
+            <div id="loadingText">題目載入中...</div>
+            <form id="examForm"></form>
+        </div>
+
+        <div id="page3" class="page" style="max-height: 85vh; overflow-y: auto; padding-right: 10px;">
+            <div id="resultSummary">
+                <p class="info-item"><span>考試項目</span><span id="displayExamType" class="value" style="font-weight:bold; color:#2c3e50;"></span></p>
+                <p class="info-item"><span>廠商名稱</span><span id="displayVendorName" class="value"></span></p>
+                <p class="info-item"><span>工號</span><span id="displayEmployeeId" class="value"></span></p>
+                <p class="info-item"><span>姓名</span><span id="displayName" class="value"></span></p>
+                <div class="score-display">
+                    <span id="displayScore" class="large-score"></span>
+                    <span id="displayStatus" class="status-box"></span>
+                </div>
+                <div id="errorList"></div>
+            </div>
+            <p class="exam-date">日期: <span id="currentDate"></span></p>
+            <button id="submitToDatabase" onclick="uploadData()">確認並送出成績</button>
+            <button onclick="location.reload()" style="background-color: #6c757d; margin-top: 10px;">重新考試 (不存檔)</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
