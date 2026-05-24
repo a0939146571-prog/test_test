@@ -1,4 +1,4 @@
-const GAS_URL = "AKfycbxxReCxqhxQwwlkoVOX4HPPWxnzVNPPvCTOrO25SB0R128rCoNP52ia20f32BcHhcgu"; 
+const GAS_URL = "AKfycbyJP_KzE-qsHJOUoZiUAhoweAjphbkPe0hMQrL9IkDD5GXGfWKEc497Q6mhP-24mVba"; 
 let examResultData = null; 
 
 // 進入第二頁並依據下拉選單抓取考題
