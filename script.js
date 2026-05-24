@@ -1,4 +1,4 @@
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxxReCxqhxQwwlkoVOX4HPPWxnzVNPPvCTOrO25SB0R128rCoNP52ia20f32BcHhcgu/exec"; 
+const GAS_URL = "AKfycbxxReCxqhxQwwlkoVOX4HPPWxnzVNPPvCTOrO25SB0R128rCoNP52ia20f32BcHhcgu"; 
 let examResultData = null; 
 
 // 進入第二頁並依據下拉選單抓取考題
