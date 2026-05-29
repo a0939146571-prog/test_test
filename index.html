@@ -37,23 +37,27 @@
                     <option value="天花板_簡易母索">天花板_簡易母索</option>
                 </select>
             </div>
-            <button class="btn-submit" onclick="goToPage2()">確認並開始測驗</button>
+            <button class="btn-submit" id="startExamBtn">確認並開始測驗</button>
         </div>
 
-        <div id="page2" class="page">
+        <div id="quizPage" class="page">
             <h2>線上測驗試卷</h2>
-            <div id="loadingText" class="loading">正在從雲端題庫隨機抽取題型，請稍候...</div>
-            <form id="examForm"></form>
+            <div id="loadingText" class="loading" style="display: none; color: #0288d1; font-weight: bold; margin: 15px 0;">正在從雲端題庫隨機抽取題型，請稍候...</div>
+            
+            <form id="quizForm">
+                <div id="questionsContainer"></div>
+                <input type="submit" id="submitBtn" class="btn-submit" value="確認交卷" style="margin-top: 20px;">
+            </form>
         </div>
 
-        <div id="page3" class="page">
+        <div id="resultPage" class="page">
             <h2>測驗結果評定</h2>
             <div id="resultSummary">
                 <div class="info-grid">
-                    <p class="info-item"><span>考試項目</span><span id="displayExamType" class="value text-highlight"></span></p>
-                    <p class="info-item"><span>廠商名稱</span><span id="displayVendorName" class="value"></span></p>
-                    <p class="info-item"><span>工號</span><span id="displayEmployeeId" class="value"></span></p>
-                    <p class="info-item"><span>姓名</span><span id="displayName" class="value"></span></p>
+                    <p class="info-item"><span>考試項目</span><span id="resExamType" class="value text-highlight"></span></p>
+                    <p class="info-item"><span>廠商名稱</span><span id="resVendor" class="value"></span></p>
+                    <p class="info-item"><span>工號</span><span id="resId" class="value"></span></p>
+                    <p class="info-item"><span>姓名</span><span id="resName" class="value"></span></p>
                 </div>
                 
                 <div class="score-container">
@@ -64,13 +68,12 @@
                     <div id="displayStatus" class="status-box">評定中</div>
                 </div>
                 
-                <div id="errorList" class="error-zone"></div>
+                <h3 style="margin-top:25px; border-bottom: 2px solid #ccc; padding-bottom:5px;">即時作答明細檢討</h3>
+                <div id="reviewContainer" class="error-zone"></div>
             </div>
-            <p class="exam-date">評定日期: <span id="currentDate"></span></p>
             
-            <div class="button-group">
-                <button id="submitToDatabase" class="btn-submit" onclick="uploadData()">確認並送出成績至環安衛後台</button>
-                <button class="btn-secondary" onclick="location.reload()">重新考試 (放棄本次成績)</button>
+            <div class="button-group" style="margin-top: 25px;">
+                <button class="btn-submit" onclick="location.reload()">確認並關閉視窗 (系統已自動背景上傳並產出 PDF)</button>
             </div>
         </div>
     </div>
