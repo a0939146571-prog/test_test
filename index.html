@@ -13,6 +13,7 @@
             <p class="subtitle">EHS Contractor Examination System</p>
         </header>
 
+        <!-- 第一頁：登入資訊 -->
         <div id="page1" class="page active">
             <h2>請輸入應檢人資訊</h2>
             <div class="form-group">
@@ -40,16 +41,17 @@
             <button class="btn-submit" id="startExamBtn">確認並開始測驗</button>
         </div>
 
+        <!-- 第二頁：線上測驗試卷 -->
         <div id="quizPage" class="page">
             <h2>線上測驗試卷</h2>
-            <div id="loadingText" class="loading" style="display: none; color: #0288d1; font-weight: bold; margin: 15px 0;">正在從雲端題庫隨機抽取題型，請稍候...</div>
-            
+            <div id="loadingText" class="loading" style="display: none; color: #0288d1; font-weight: bold; margin: 15px 0;">正在隨機抽取題型...</div>
             <form id="quizForm">
                 <div id="questionsContainer"></div>
-                <input type="submit" id="submitBtn" class="btn-submit" value="確認交卷" style="margin-top: 20px;">
+                <input type="submit" id="submitBtn" class="btn-submit" value="確認交卷評分">
             </form>
         </div>
 
+        <!-- 第三頁：結果與手動送出 -->
         <div id="resultPage" class="page">
             <h2>測驗結果評定</h2>
             <div id="resultSummary">
@@ -68,12 +70,13 @@
                     <div id="displayStatus" class="status-box">評定中</div>
                 </div>
                 
-                <h3 style="margin-top:25px; border-bottom: 2px solid #ccc; padding-bottom:5px;">即時作答明細檢討</h3>
                 <div id="reviewContainer" class="error-zone"></div>
             </div>
             
             <div class="button-group" style="margin-top: 25px;">
-                <button class="btn-submit" onclick="location.reload()">確認並關閉視窗 (系統已自動背景上傳並產出 PDF)</button>
+                <!-- 💡 保留關鍵按鈕：只有及格才建議點擊 -->
+                <button id="uploadBtn" class="btn-submit" style="background-color: #2e7d32;">確認並送出成績至環安衛後台</button>
+                <button class="btn-secondary" onclick="location.reload()">放棄成績並重新考試</button>
             </div>
         </div>
     </div>
